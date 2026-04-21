@@ -35,27 +35,22 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
       if (!response.ok) throw new Error("Connection failed");
 
       setStatus("cracking");
-      setLogs(prev => [...prev, "اتصال ناجح ✅", "بدء عملية المعالجة العميقة..."]);
+      setLogs(prev => [...prev, "اتصال ناجح ✅", "بدء المعالجة الذكية..."]);
       
       const blob = await response.blob();
-      const endTime = Date.now();
-      const duration = endTime - startTime;
-
-      // Add gradual logs for "Realism" and UX
+      
       const finalSteps = [
-        "تفكيك ملفات DEX الثنائية...",
-        "بدء الفحص العميق لقاعدة البيانات...",
+        "تفكيك ملفات DEX...",
         "حقن كود الدخول: " + customKey,
-        "تحديد ثغرات الاتصال بالسيرفر...",
-        "تبديل روابط التحقق بباتش Bypass محلي...",
-        "تجاوز حماية التوقيع الرقمي (Signature Hack)...",
-        "تعديل السلاسل النصية بنجاح 100%...",
-        "إعادة تجميع الملفات وتوقيع النسخة النهائية...",
-        "تجهيز تقرير ZAID MOD VIP النهائي..."
+        "تبديل روابط التحقق...",
+        "تجاوز حماية التوقيع...",
+        "تعديل السلاسل النصية...",
+        "إعادة تجميع الملفات...",
+        "تجهيز التقرير النهائي..."
       ];
 
       for (let i = 0; i < finalSteps.length; i++) {
-        await new Promise(r => setTimeout(r, 600));
+        await new Promise(r => setTimeout(r, 200)); // Much faster
         setLogs(prev => [...prev, finalSteps[i]]);
       }
       
@@ -79,54 +74,48 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-6">
-      <div className="mb-8 flex w-full max-w-2xl items-center justify-between">
+    <div className="flex min-h-[100dvh] flex-col items-center p-4">
+      <div className="mb-6 flex w-full max-w-md items-center justify-between px-2">
         <button 
           onClick={onBack}
-          className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/10 text-red-400 transition-colors hover:bg-red-500/20"
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/10 text-red-400 transition-colors hover:bg-red-500/20"
         >
-          <ChevronRight size={20} className="rotate-180" />
+          <ChevronRight size={18} className="rotate-180" />
         </button>
-        <h1 className="text-xl font-black text-white italic tracking-widest flex items-center gap-2">
-          <span>تكريك وحقن اللودرات</span>
-          <Cpu className="text-red-500" size={20} />
-        </h1>
-        <div className="w-10" />
+        <div className="flex items-center gap-2">
+          <h1 className="text-sm font-black text-white italic tracking-widest uppercase">Loader Modder</h1>
+          <Cpu className="text-red-500" size={16} />
+        </div>
+        <div className="w-9" />
       </div>
 
       <AnimatePresence mode="wait">
         {status === "idle" && (
           <motion.div
             key="idle"
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            className="flex w-full max-w-2xl flex-col gap-6"
+            className="flex w-full max-w-md flex-col gap-4"
           >
-            {/* Custom Code Input */}
-            <div className="rounded-3xl border border-red-500/20 bg-red-950/10 p-6">
-               <label className="mb-3 block text-right text-xs font-black text-red-500 uppercase tracking-widest">كود الدخول المخصص (الذي سيتم حقنه)</label>
+            <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 glass-panel">
+               <label className="mb-2 block text-[10px] font-black text-red-500 uppercase tracking-widest">Injection Key</label>
                <input 
                   type="text" 
                   value={customKey}
                   onChange={(e) => setCustomKey(e.target.value)}
-                  placeholder="مثال: ZAIDMODVIP"
-                  className="w-full rounded-2xl border border-red-500/30 bg-black/40 py-4 px-6 text-center text-lg font-black text-white outline-none focus:border-red-500"
+                  placeholder="EX: ZAIDMOD"
+                  className="w-full rounded-xl border border-red-500/20 bg-black/40 py-3 px-4 text-center text-sm font-black text-white outline-none focus:border-red-500/50"
                />
-               <p className="mt-3 text-right text-[10px] text-red-300/40 leading-relaxed italic">
-                 * سيقوم النظام بتعديل التطبيق المرفوع بحيث يصبح هذا الكود هو المفتاح الوحيد للدخول إليه بعد التثبيت.
-               </p>
             </div>
 
             <div 
               onClick={() => fileInputRef.current?.click()}
-              className="group flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-[2.5rem] border-2 border-dashed border-red-500/30 bg-red-950/5 transition-all hover:border-red-500/60 hover:bg-red-950/10"
+              className="group flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-red-500/20 bg-white/[0.01] transition-all hover:bg-white/[0.03]"
             >
-              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10 text-red-500 group-hover:scale-110 transition-transform">
-                <Upload size={32} />
+              <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 text-red-500 group-hover:scale-110 transition-transform">
+                <Upload size={24} />
               </div>
-              <h2 className="text-xl font-bold text-white">{file ? file.name : "ارفع تطبيق APK"}</h2>
-              <p className="mt-1 text-sm text-red-300/50">النظام يدعم جميع اصدارات الاندرويد</p>
+              <h2 className="text-sm font-bold text-white">{file ? file.name : "Select Loader APK"}</h2>
               <input 
                 type="file" 
                 ref={fileInputRef}
@@ -138,13 +127,12 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
 
             {file && (
               <motion.button
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 onClick={() => simulateCracking(file)}
-                className="flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-red-600 to-red-800 py-5 text-xl font-black text-white shadow-2xl shadow-red-900/40"
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-red-600 to-red-800 py-4 text-sm font-black text-white red-glow-strong"
               >
-                <span>بدء عملية التكريك والحقن</span>
-                <Cpu size={24} />
+                <span>Process Application</span>
               </motion.button>
             )}
           </motion.div>
@@ -155,28 +143,23 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
             key="loading"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex w-full max-w-2xl flex-col"
+            className="flex w-full max-w-md flex-col"
           >
-            <div className="mb-6 overflow-hidden rounded-3xl border border-red-500/20 bg-[#120000] p-6 shadow-2xl">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <RefreshCw className="animate-spin text-red-500" size={20} />
-                  <span className="text-sm font-bold text-white capitalize">{status === 'uploading' ? 'جاري الرفع' : 'جاري التكريك'}...</span>
+            <div className="overflow-hidden rounded-2xl glass-panel p-4">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="animate-spin text-red-500" size={14} />
+                  <span className="text-[11px] font-black text-white uppercase">{status === 'uploading' ? 'Uploading' : 'Processing'}...</span>
                 </div>
-                <div className="text-[10px] uppercase tracking-widest text-red-500/50">Processing Engine v4.8</div>
+                <div className="text-[9px] font-bold text-red-500/40 tracking-[0.2em]">ENGINE V5.0</div>
               </div>
               
-              <div className="h-64 overflow-y-auto space-y-2 rounded-xl bg-black/40 p-4 font-mono text-[11px] text-red-400/80 scrollbar-hide">
+              <div className="h-48 overflow-y-auto space-y-1.5 rounded-lg bg-black/40 p-3 font-mono text-[9px] text-red-400/80 scrollbar-hide">
                 {logs.map((log, i) => (
-                  <motion.div 
-                    initial={{ x: -10, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    key={i} 
-                    className="flex gap-2"
-                  >
-                    <span className="text-red-500 font-bold">[{new Date().toLocaleTimeString('ar-EG')}]</span>
+                  <div key={i} className="flex gap-2">
+                    <span className="opacity-40">{new Date().toLocaleTimeString('ar-EG', { hour12: false })}</span>
                     <span>{log}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -188,72 +171,45 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
             key="done"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="flex w-full max-w-2xl flex-col items-center"
+            className="flex w-full max-w-md flex-col items-center"
           >
-            <div className="relative mb-8">
-              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-green-500/20 text-green-400 shadow-[0_0_60px_rgba(34,197,94,0.3)]">
-                <CheckCircle2 size={56} />
-              </div>
-              <motion.div 
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute -right-2 -top-2 flex h-10 w-10 items-center justify-center rounded-xl bg-green-500 text-white shadow-lg"
-              >
-                <Shield size={20} />
-              </motion.div>
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl glass-panel bg-green-500/10 text-green-500 shadow-xl shadow-green-500/10">
+              <CheckCircle2 size={32} />
             </div>
             
-            <h2 className="mb-2 text-3xl font-black text-white italic">PATCH SUCCESSFUL</h2>
-            
-            <div className="mb-10 w-full rounded-3xl border border-green-500/20 bg-green-500/5 p-6 text-center">
-               <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-green-400/60">كود الدخول الجديد المحقون</div>
-               <div className="text-2xl font-black text-white">{customKey}</div>
-               <p className="mt-4 text-xs text-green-300/50 leading-relaxed">
-                 تم تعديل منطق الحماية في التطبيق الأصلي وتبديله بباتش مخصص. بمجرد التثبيت، استخدم الكود أعلاه لتسجيل الدخول بنجاح.
-               </p>
-            </div>
+            <h2 className="mb-1 text-lg font-black text-white italic text-center uppercase tracking-tight">Injection Complete</h2>
+            <p className="mb-6 text-center text-[10px] text-white/30 uppercase tracking-[0.2em] font-bold">Injected Key: {customKey}</p>
 
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => {
-                  const blob = (window as any)._lastCrackedBlob;
-                  if (!blob) return;
-                  
-                  // Force the correct MIME type for the blob
-                  const apkBlob = new Blob([blob], { type: 'application/vnd.android.package-archive' });
-                  const url = URL.createObjectURL(apkBlob);
-                  
-                  const a = document.createElement('a');
-                  a.href = url;
-                  // Ensure clean filename without leading dots or weird characters
-                  const cleanName = (file?.name || 'app.apk').replace(/\.apk$/, '');
-                  a.download = `ZAID_ELITE_${cleanName}.apk`;
-                  
-                  // Append to body to ensure it works in all browsers
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  
-                  // Clean up URL
-                  setTimeout(() => URL.revokeObjectURL(url), 1000);
-                }}
-                className="flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-green-600 to-emerald-600 py-5 text-lg font-bold text-white shadow-xl shadow-green-900/40"
-              >
-                <span>تحميل التطبيق المعدل</span>
-                <Download size={22} />
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setStatus("idle")}
-                className="flex items-center justify-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 py-5 text-lg font-bold text-red-300"
-              >
-                <span>تبديل التطبيق</span>
-                <RefreshCw size={22} />
-              </motion.button>
+            <div className="grid w-full gap-3">
+               <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    const blob = (window as any)._lastCrackedBlob;
+                    if (!blob) return;
+                    const apkBlob = new Blob([blob], { type: 'application/vnd.android.package-archive' });
+                    const url = URL.createObjectURL(apkBlob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const cleanName = (file?.name || 'app.apk').replace(/\.apk$/, '');
+                    a.download = `ZAID_ELITE_${cleanName}.apk`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  }}
+                  className="flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-red-600 to-red-900 py-4 text-xs font-black text-white red-glow-strong"
+                >
+                  <span>Download Build</span>
+                  <Download size={16} />
+                </motion.button>
+                
+                <button 
+                  onClick={() => setStatus("idle")}
+                  className="py-2 text-[10px] font-black uppercase text-white/20 hover:text-white/40 transition-colors"
+                >
+                  Process Another
+                </button>
             </div>
           </motion.div>
         )}

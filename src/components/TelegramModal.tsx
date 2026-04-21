@@ -19,45 +19,38 @@ export default function TelegramModal({ isOpen, onClose }: TelegramModalProps) {
             onClick={onClose}
           />
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-red-500/30 bg-[#120000] p-8 text-center shadow-2xl"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative w-full max-w-[320px] overflow-hidden rounded-[2rem] glass-panel p-6 text-center shadow-2xl red-glow-strong"
           >
-            <button 
-              onClick={onClose}
-              className="absolute top-4 right-4 text-red-400 hover:text-white transition-colors"
-            >
-              <X size={24} />
-            </button>
-
             <motion.div 
-              animate={{ y: [0, -10, 0] }}
+              animate={{ y: [0, -5, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-red-600 shadow-[0_0_30px_rgba(239,68,68,0.4)]"
+              className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-red-600 shadow-lg shadow-red-900/50"
             >
-              <Send className="h-10 w-10 text-white" />
+              <Send className="h-7 w-7 text-white" />
             </motion.div>
 
-            <h2 className="mb-2 text-2xl font-bold text-white">انضم لقناتنا</h2>
-            <p className="mb-8 text-red-200/70 text-sm leading-relaxed">
-              تابع آخر التحديثات والباتشات الحصرية على قناتنا الرسمية في تليجرام
+            <h2 className="mb-2 text-xl font-black text-white italic">JOIN TELEGRAM</h2>
+            <p className="mb-6 text-white/40 text-[10px] leading-relaxed uppercase tracking-widest font-bold">
+              Get exclusive VIP patches and direct support.
             </p>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               <a
                 href="https://t.me/cvh48"
                 target="_blank"
                 rel="noreferrer"
-                className="block w-full rounded-xl bg-white py-4 text-center font-bold text-black transition-transform active:scale-95"
+                className="block w-full rounded-xl bg-white py-3 text-xs font-black text-black transition-transform active:scale-95"
               >
-                انضم الآن @cvh48
+                JOIN @cvh48
               </a>
               <button
                 onClick={onClose}
-                className="block w-full rounded-xl border border-red-500/20 bg-red-500/10 py-4 text-center font-bold text-red-400 transition-colors hover:bg-red-500/20"
+                className="block w-full py-2 text-[10px] font-black text-white/20 uppercase tracking-widest hover:text-white/40 transition-colors"
               >
-                تخطي الآن
+                Skip for now
               </button>
             </div>
           </motion.div>

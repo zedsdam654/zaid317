@@ -8,84 +8,67 @@ interface DashboardProps {
 
 export default function Dashboard({ onSelectCracking, onSelectExtraction }: DashboardProps) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center px-6 py-12">
       <motion.div
-        initial={{ y: -30, opacity: 0 }}
+        initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="mb-12 text-center"
+        className="mb-8 text-center"
       >
-        <div className="mb-4 text-red-500 font-bold uppercase tracking-widest">مرحباً بك في نظام</div>
-        <h1 className="text-6xl font-black text-white tracking-tighter shadow-red-500/20 drop-shadow-2xl">ZAID MOD VIP</h1>
-        <div className="mt-4 inline-block rounded-lg border border-red-500/30 bg-red-950/20 px-6 py-2 text-xs font-black text-red-400 uppercase tracking-[0.2em]">
-          ELITE CONTROL PANEL V5.0
+        <h1 className="text-4xl font-black text-white tracking-tighter text-glow">DASHBOARD</h1>
+        <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-950/20 px-4 py-1">
+          <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+          <span className="text-[10px] font-black text-red-500 uppercase tracking-widest leading-none">System Secure</span>
         </div>
       </motion.div>
 
-      <div className="grid w-full max-w-2xl gap-8 sm:grid-cols-2">
+      <div className="grid w-full max-w-[360px] gap-4">
         <motion.button
-          whileHover={{ scale: 1.05, y: -5 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02, x: 5 }}
+          whileTap={{ scale: 0.98 }}
           onClick={onSelectCracking}
-          className="group relative h-64 overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-gradient-to-br from-[#120000] to-[#050000] p-8 text-right shadow-2xl transition-all hover:border-red-500/50 hover:shadow-red-500/10"
+          className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-5 text-right transition-all hover:border-red-500/30 red-glow glass-panel"
         >
-          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-red-600/10 blur-3xl transition-colors group-hover:bg-red-600/20" />
-          
-          <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-600 text-white shadow-xl shadow-red-900/50 ring-4 ring-red-500/20">
-            <Zap size={32} />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-lg shadow-red-900/40">
+            <Zap size={24} />
           </div>
           
-          <h2 className="mb-2 text-2xl font-black text-white">تكريك لودرات</h2>
-          <p className="text-sm leading-relaxed text-red-100/60 font-medium">
-            فك حماية اللودرات، وتخطي أنظمة التحقق، وحقن أكواد الدخول المخصصة بضغطة واحدة
-          </p>
+          <div className="flex-1">
+            <h2 className="text-lg font-black text-white group-hover:text-red-500 transition-colors">تكريك لودرات</h2>
+            <p className="text-[10px] text-white/40 font-medium">Bypass Security & Key Injection</p>
+          </div>
 
-          <div className="absolute bottom-8 left-8 flex items-center gap-2 text-red-500 opacity-0 transition-all group-hover:left-10 group-hover:opacity-100">
-            <span className="text-[10px] font-black uppercase tracking-widest leading-none">فتح المحرك</span>
-            <ChevronLeft size={16} />
-          </div>
+          <ChevronLeft size={18} className="text-red-500 group-hover:-translate-x-1 transition-transform" />
         </motion.button>
 
         <motion.button
-          whileHover={{ scale: 1.05, y: -5 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02, x: 5 }}
+          whileTap={{ scale: 0.98 }}
           onClick={onSelectExtraction}
-          className="group relative h-64 overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-gradient-to-br from-[#120000] to-[#050000] p-8 text-right shadow-2xl transition-all hover:border-red-500/50 hover:shadow-red-500/10"
+          className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-5 text-right transition-all hover:border-red-500/30 red-glow glass-panel"
         >
-          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-red-600/10 blur-3xl transition-colors group-hover:bg-red-600/20" />
-
-          <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-600 text-white shadow-xl shadow-red-900/50 ring-4 ring-red-500/20">
-            <Target size={32} />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-lg shadow-red-900/40">
+            <Target size={24} />
           </div>
 
-          <h2 className="mb-2 text-2xl font-black text-white">تكريك نسخ ببجي</h2>
-          <p className="text-sm leading-relaxed text-red-100/60 font-medium">
-            تعديل نسخ الببجي المعدلة، حقن أكواد VIP، وتخطي حمايات تسجيل الدخول العالمية
-          </p>
-
-          <div className="absolute bottom-8 left-8 flex items-center gap-2 text-red-500 opacity-0 transition-all group-hover:left-10 group-hover:opacity-100">
-            <span className="text-[10px] font-black uppercase tracking-widest leading-none">حقن النسخة</span>
-            <ChevronLeft size={16} />
+          <div className="flex-1">
+            <h2 className="text-lg font-black text-white group-hover:text-red-500 transition-colors">تكريك نسخ ببجي</h2>
+            <p className="text-[10px] text-white/40 font-medium">PUBG Modding & VIP Access</p>
           </div>
+
+          <ChevronLeft size={18} className="text-red-500 group-hover:-translate-x-1 transition-transform" />
         </motion.button>
       </div>
 
       <motion.div 
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        className="mt-20 text-center"
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="mt-16 text-center"
       >
-        <div className="mb-4 text-[10px] uppercase tracking-[0.4em] text-red-500/40 font-bold">Powered By</div>
-        <motion.div 
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-2xl font-black text-white tracking-widest"
-        >
-          ZAID MOD VIP
-        </motion.div>
-        <div className="mt-2 flex items-center justify-center gap-4 text-[10px] font-bold text-red-500/60 uppercase">
+        <div className="flex items-center justify-center gap-3 text-[10px] font-bold text-red-500/40 uppercase">
           <span>@cvh48</span>
-          <span className="h-1 w-1 rounded-full bg-red-500/30" />
-          <span>@HZU2U</span>
+          <span className="h-1 w-1 rounded-full bg-red-500/20" />
+          <span>ZAID ELITE V5.0</span>
         </div>
       </motion.div>
     </div>

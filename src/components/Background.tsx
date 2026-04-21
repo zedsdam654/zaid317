@@ -15,7 +15,7 @@ export default function Background() {
           repeat: Infinity,
           ease: "linear",
         }}
-        className="absolute -top-20 -left-20 h-[500px] w-[500px] rounded-full bg-red-900/20 blur-[120px]"
+        className="absolute -top-20 -left-20 h-[500px] w-[500px] rounded-full bg-red-900/20 blur-[120px] will-change-transform"
       />
       <motion.div
         animate={{
@@ -28,7 +28,7 @@ export default function Background() {
           repeat: Infinity,
           ease: "linear",
         }}
-        className="absolute top-1/2 -right-20 h-[400px] w-[400px] rounded-full bg-red-600/10 blur-[100px]"
+        className="absolute top-1/2 -right-20 h-[400px] w-[400px] rounded-full bg-red-600/10 blur-[100px] will-change-transform"
       />
       <motion.div
         animate={{
@@ -40,7 +40,7 @@ export default function Background() {
           repeat: Infinity,
           ease: "linear",
         }}
-        className="absolute -bottom-20 left-1/4 h-[600px] w-[600px] rounded-full bg-red-900/10 blur-[150px]"
+        className="absolute -bottom-20 left-1/4 h-[600px] w-[600px] rounded-full bg-red-900/10 blur-[150px] will-change-transform"
       />
 
       {/* Grid Pattern */}
