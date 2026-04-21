@@ -14,19 +14,27 @@ async function startServer() {
   app.use(express.json({ limit: "1000mb" }));
   app.use(express.urlencoded({ limit: "1000mb", extended: true }));
 
+  const storage = multer.diskStorage({
+    destination: "/tmp",
+    filename: (req, file, cb) => {
+      cb(null, `${Date.now()}-${file.originalname}`);
+    },
+  });
+
   const upload = multer({ 
-    storage: multer.memoryStorage(),
+    storage,
     limits: { fileSize: 1024 * 1024 * 1024 } // 1GB limit
   });
 
   // API Route: Extract Patterns
   app.post("/api/extract", (req, res, next) => {
-    upload.single("apk")(req, res, (err) => {
+    upload.any()(req, res, (err) => {
       if (err) return res.status(400).json({ error: "فشل رفع الملف: " + err.message });
-      if (!req.file) return res.status(400).json({ error: "لم يتم اختيار ملف" });
+      const file = req.files && (req.files as any)[0];
+      if (!file) return res.status(400).json({ error: "لم يتم اختيار ملف" });
 
       try {
-        const zip = new AdmZip(req.file.buffer);
+        const zip = new AdmZip(file.path);
         const zipEntries = zip.getEntries();
         const results: { label: string; value: string }[] = [];
         let securityMatch = "";
@@ -101,20 +109,24 @@ async function startServer() {
 
   // API Route: Login Bypass (Cracking) & Custom Code Injection
   app.post("/api/crack", (req, res) => {
-    upload.single("apk")(req, res, (err) => {
+    upload.any()(req, res, (err) => {
       if (err) {
         console.error("Multer error:", err);
         return res.status(400).json({ error: "Upload failed: " + err.message });
       }
-      if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+      const file = req.files && (req.files as any)[0];
+      if (!file) {
+        console.error("No file in request body:", req.body);
+        return res.status(400).json({ error: "لم يتم استقبال أي ملف في السيرفر" });
+      }
       
       const customCode = req.body.customCode || "ZAID-MOD-VIP";
-      console.log(`Starting crack process for: ${req.file.originalname}, Size: ${req.file.size}`);
+      console.log(`Starting crack process for: ${file.originalname}, Path: ${file.path}`);
 
       try {
         let zip;
         try {
-          zip = new AdmZip(req.file.buffer);
+          zip = new AdmZip(file.path);
         } catch (zipErr: any) {
           console.error("Zip parse error:", zipErr);
           return res.status(400).json({ error: "فشل فتح ملف APK. تأكد أنه ملف صحيح وغير تالف." });
