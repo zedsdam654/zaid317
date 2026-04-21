@@ -6,24 +6,17 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const upload = multer({ storage: multer.memoryStorage() });
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json({ limit: "200mb" }));
-  app.use(express.urlencoded({ limit: "200mb", extended: true }));
+  app.use(express.json({ limit: "1000mb" }));
+  app.use(express.urlencoded({ limit: "1000mb", extended: true }));
 
-  // Global Error Handler for JSON responses
-  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error("SERVER ERROR:", err);
-    res.status(500).json({ 
-      error: "حدث خطأ في السيرفر", 
-      details: err.message,
-      results: [],
-      securityData: null 
-    });
+  const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 1024 * 1024 * 1024 } // 1GB limit
   });
 
   // API Route: Extract Patterns
@@ -202,6 +195,18 @@ async function startServer() {
     appType: "spa",
   });
   app.use(vite.middlewares);
+
+  // Global Error Handler
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error("GLOBAL SERVER ERROR:", err);
+    if (!res.headersSent) {
+      const status = err.status || err.statusCode || 500;
+      res.status(status).json({ 
+        error: err.message || "حدث خطأ في السيرفر",
+        status
+      });
+    }
+  });
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);

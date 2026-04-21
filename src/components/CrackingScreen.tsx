@@ -32,8 +32,17 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "فشل غير معروف في السيرفر" }));
-        throw new Error(errorData.error || "Connection failed");
+        const text = await response.text();
+        let errorMessage = "فشل في معالجة طلب التعديل";
+        try {
+          const json = JSON.parse(text);
+          errorMessage = json.error || errorMessage;
+        } catch (e) {
+          if (response.status === 413) errorMessage = "حجم الملف كبير جداً للسيرفر (الحد 1 جيجا)";
+          else if (response.status === 504) errorMessage = "انتهى وقت المعالجة، قد يكون الملف ضخماً جداً";
+          else errorMessage = `خطأ في الاتصال بالسيرفر (${response.status})`;
+        }
+        throw new Error(errorMessage);
       }
 
       setStatus("cracking");

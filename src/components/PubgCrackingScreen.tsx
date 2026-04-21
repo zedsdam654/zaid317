@@ -45,8 +45,17 @@ export default function PubgCrackingScreen({ onBack }: PubgCrackingScreenProps) 
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Server rejection" }));
-        throw new Error(errorData.error || "Bypass failed");
+        const text = await response.text();
+        let errorMessage = "Build process failed";
+        try {
+          const json = JSON.parse(text);
+          errorMessage = json.error || errorMessage;
+        } catch (e) {
+          if (response.status === 413) errorMessage = "File too large for server (1GB limit)";
+          else if (response.status === 504) errorMessage = "Processing timeout (file is too massive)";
+          else errorMessage = `Server error (${response.status})`;
+        }
+        throw new Error(errorMessage);
       }
 
       const blob = await response.blob();
