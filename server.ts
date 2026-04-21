@@ -109,64 +109,68 @@ async function startServer() {
   // API Route: Login Bypass (Cracking) & Custom Code Injection
   app.post("/api/crack", (req, res) => {
     upload.single("apk")(req, res, (err) => {
-      if (err) return res.status(400).json({ error: "Upload failed" });
+      if (err) {
+        console.error("Multer error:", err);
+        return res.status(400).json({ error: "Upload failed: " + err.message });
+      }
       if (!req.file) return res.status(400).json({ error: "No file uploaded" });
       
       const customCode = req.body.customCode || "ZAID-MOD-VIP";
-      const appUrl = process.env.APP_URL || "http://localhost:3000";
-      const bypassUrl = `${appUrl}/api/bypass/`.substring(0, 30); // Keep it relatively short
+      console.log(`Starting crack process for: ${req.file.originalname}, Size: ${req.file.size}`);
 
       try {
-        const zip = new AdmZip(req.file.buffer);
+        let zip;
+        try {
+          zip = new AdmZip(req.file.buffer);
+        } catch (zipErr: any) {
+          console.error("Zip parse error:", zipErr);
+          return res.status(400).json({ error: "فشل فتح ملف APK. تأكد أنه ملف صحيح وغير تالف." });
+        }
+
         const zipEntries = zip.getEntries();
         let patchCount = 0;
         
         // 1. Remove signatures
         zipEntries.forEach(entry => {
           if (entry.entryName.startsWith("META-INF/")) {
-            zip.deleteFile(entry.entryName);
+            try {
+              zip.deleteFile(entry.entryName);
+            } catch (e) {}
           }
         });
 
-        // 2. "Deep Patching": Search and replace URLs and Boolean results in DEX/SO files
+        // 2. "Deep Patching"
         zipEntries.forEach(entry => {
-          const entryName = entry.entryName.toLowerCase();
-          if (entryName.endsWith(".dex") || entryName.endsWith(".so")) {
-             let data = entry.getData();
-             const content = data.toString("latin1");
-             
-             // A. URL Redirection Patch
-             const urlPattern = /https?:\/\/[a-z0-9.-]+\/[a-z0-9._\/-]+\?/gi;
-             
-             let match;
-             let modified = false;
-             while ((match = urlPattern.exec(content)) !== null) {
-                const originalUrl = match[0];
-                // Replace with a bypass proxy (preserving exact length)
-                let fakeBase = `http://zaid.vip/api/bypass?`;
-                if (fakeBase.length <= originalUrl.length) {
-                  let finalUrl = fakeBase.padEnd(originalUrl.length, " ");
-                  const bufferPayload = Buffer.from(finalUrl, "latin1");
-                  data.fill(bufferPayload, match.index, match.index + originalUrl.length);
-                  modified = true;
-                  patchCount++;
-                }
-             }
+          try {
+            const entryName = entry.entryName.toLowerCase();
+            if (entryName.endsWith(".dex") || entryName.endsWith(".so")) {
+               let data = entry.getData();
+               // Memory optimization: only convert to string if size is reasonable
+               if (data.length < 50 * 1024 * 1024) { 
+                 const content = data.toString("latin1");
+                 const urlPattern = /https?:\/\/[a-z0-9.-]+\/[a-z0-9._\/-]+\?/gi;
+                 
+                 let match;
+                 let modified = false;
+                 while ((match = urlPattern.exec(content)) !== null) {
+                    const originalUrl = match[0];
+                    let fakeBase = `http://zaid.vip/api/bypass?`;
+                    if (fakeBase.length <= originalUrl.length) {
+                      let finalUrl = fakeBase.padEnd(originalUrl.length, " ");
+                      const bufferPayload = Buffer.from(finalUrl, "latin1");
+                      data.fill(bufferPayload, match.index, match.index + originalUrl.length);
+                      modified = true;
+                      patchCount++;
+                    }
+                 }
 
-             // B. Method Logic Patching (Heuristic)
-             if (entryName.endsWith(".dex")) {
-                const indicators = ["isRegistered", "checkLicense", "verifyUser", "loginResult"];
-                indicators.forEach(pattern => {
-                   if (content.includes(pattern)) {
-                     // Metadata marking (simulation of bytecode replacement)
-                     modified = true;
-                   }
-                });
-             }
-
-             if (modified) {
-               zip.updateFile(entry.entryName, data);
-             }
+                 if (modified) {
+                   zip.updateFile(entry.entryName, data);
+                 }
+               }
+            }
+          } catch (entryErr) {
+            console.warn(`Skipping entry ${entry.entryName} due to error`);
           }
         });
 
@@ -175,15 +179,19 @@ async function startServer() {
           key: customCode,
           bypass: true,
           developer: "ZAID MOD VIP",
-          patches: patchCount
+          patches: patchCount,
+          timestamp: new Date().toISOString()
         })));
 
         const buffer = zip.toBuffer();
+        console.log(`Crack successful. Patches: ${patchCount}`);
+        
         res.setHeader('Content-Type', 'application/vnd.android.package-archive');
         res.setHeader('Content-Disposition', `attachment; filename="ZAID_ELITE_MOD.apk"`);
         res.send(buffer);
-      } catch (err) {
-        res.status(500).json({ error: "CRACK_ERROR", details: "Deep patching failed" });
+      } catch (err: any) {
+        console.error("Crack critical error:", err);
+        res.status(500).json({ error: "فشل في معالجة التطبيق", details: err.message });
       }
     });
   });

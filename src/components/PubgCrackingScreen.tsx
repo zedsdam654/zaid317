@@ -44,9 +44,18 @@ export default function PubgCrackingScreen({ onBack }: PubgCrackingScreenProps) 
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Connection failed");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Server rejection" }));
+        throw new Error(errorData.error || "Bypass failed");
+      }
 
       const blob = await response.blob();
+      if (blob.type.includes("json")) {
+        const text = await blob.text();
+        const json = JSON.parse(text);
+        throw new Error(json.error || "File error");
+      }
+      
       (window as any)._lastCrackedBlob = blob;
 
       setStatus("cracking");
@@ -62,16 +71,17 @@ export default function PubgCrackingScreen({ onBack }: PubgCrackingScreenProps) 
       ];
 
       for (let i = 0; i < finalSteps.length; i++) {
-        await new Promise(r => setTimeout(r, 250)); // Faster
+        await new Promise(r => setTimeout(r, 200));
         addLog(finalSteps[i]);
       }
 
       setStatus("done");
-      addLog("تم تكريك النسخة بنجاح! جاهزة للتحميل.");
-    } catch (err) {
+      addLog("✅ PUBG VIP Mod Processed Successfully!");
+    } catch (err: any) {
       console.error(err);
       setStatus("idle");
-      alert("خطأ في الاتصال بالسيرفر");
+      addLog("❌ Error: " + err.message);
+      alert("Crack Failed: " + err.message);
     }
   };
 

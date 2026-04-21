@@ -26,18 +26,25 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
     formData.append("customCode", customKey);
 
     try {
-      const startTime = Date.now();
       const response = await fetch("/api/crack", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Connection failed");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "فشل غير معروف في السيرفر" }));
+        throw new Error(errorData.error || "Connection failed");
+      }
 
       setStatus("cracking");
       setLogs(prev => [...prev, "اتصال ناجح ✅", "بدء المعالجة الذكية..."]);
       
       const blob = await response.blob();
+      if (blob.type.includes("json")) {
+        const text = await blob.text();
+        const json = JSON.parse(text);
+        throw new Error(json.error || "Format error");
+      }
       
       const finalSteps = [
         "تفكيك ملفات DEX...",
@@ -46,22 +53,23 @@ export default function CrackingScreen({ onBack }: CrackingScreenProps) {
         "تجاوز حماية التوقيع...",
         "تعديل السلاسل النصية...",
         "إعادة تجميع الملفات...",
-        "تجهيز التقرير النهائي..."
+        "توقع النسخة وتجهيزها..."
       ];
 
       for (let i = 0; i < finalSteps.length; i++) {
-        await new Promise(r => setTimeout(r, 200)); // Much faster
+        await new Promise(r => setTimeout(r, 150));
         setLogs(prev => [...prev, finalSteps[i]]);
       }
       
       setStatus("done");
-      setLogs(prev => [...prev, "✅ اكتمل العمل بنجاح!"]);
+      setLogs(prev => [...prev, "✅ تم تعديل التطبيق بنجاح!"]);
       (window as any)._lastCrackedBlob = blob;
 
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       setStatus("idle");
-      alert("فشل في معالجة التطبيق. تأكد من حجم الملف واستقرار الانترنت.");
+      setLogs(prev => [...prev, "❌ خطأ: " + err.message]);
+      alert(err.message);
     }
   };
 
